@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.community.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.zl.community.model.entity.UserEntity">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="userAccount" column="user_account" jdbcType="VARCHAR"/>
+            <result property="userPassword" column="user_password" jdbcType="VARCHAR"/>
+            <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+            <result property="userAvatar" column="user_avatar" jdbcType="VARCHAR"/>
+            <result property="userProfile" column="user_profile" jdbcType="VARCHAR"/>
+            <result property="userPlace" column="user_place" jdbcType="VARCHAR"/>
+            <result property="userBirthday" column="user_birthday" jdbcType="DATE"/>
+            <result property="userDirection" column="user_direction" jdbcType="VARCHAR"/>
+            <result property="userTarget" column="user_target" jdbcType="VARCHAR"/>
+            <result property="userSchool" column="user_school" jdbcType="VARCHAR"/>
+            <result property="userMajor" column="user_major" jdbcType="VARCHAR"/>
+            <result property="userEducation" column="user_education" jdbcType="VARCHAR"/>
+            <result property="graduationYear" column="graduation_year" jdbcType="DATE"/>
+            <result property="userCompany" column="user_company" jdbcType="VARCHAR"/>
+            <result property="userStation" column="user_station" jdbcType="VARCHAR"/>
+            <result property="workingYear" column="working_year" jdbcType="DATE"/>
+            <result property="userRole" column="user_role" jdbcType="INTEGER"/>
+            <result property="gender" column="gender" jdbcType="INTEGER"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="email" column="email" jdbcType="VARCHAR"/>
+            <result property="points" column="points" jdbcType="INTEGER"/>
+            <result property="userStatus" column="user_status" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_account,user_password,
+        user_name,user_avatar,user_profile,
+        user_place,user_birthday,user_direction,
+        user_target,user_school,user_major,
+        user_education,graduation_year,user_company,
+        user_station,working_year,user_role,
+        gender,phone,email,
+        points,user_status,create_time,
+        update_time,is_deleted
+    </sql>
+    <select id="selectByUserNameOrEmailOrPhone" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where
+        user_name = #{userName,jdbcType=VARCHAR}
+        OR email = #{email,jdbcType=VARCHAR}
+        OR phone = #{phone,jdbcType=VARCHAR}
+    </select>
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.community.mapper.TbPermissionMapper">
+
+    <resultMap id="BaseResultMap" type="com.zl.community.model.entity.PermissionEntity">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="url" column="url" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="permission" column="permission" jdbcType="VARCHAR"/>
+        <result property="method" column="method" jdbcType="VARCHAR"/>
+        <result property="sort" column="sort" jdbcType="INTEGER"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
+        <result property="parentId" column="parent_id" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,name,url,
+        type,permission,method,
+        sort,is_deleted,create_time,
+        update_time,update_user,parent_id
+    </sql>
+    <!--将集合roleIds中的元素逐个取出，并拼接成SQL语句中的IN子句，格式为(id1, id2, id3, ...)。具体来说，
+    <foreach>标签中的item属性指定了集合中每个元素在SQL语句中的占位符名称，而collection属性则指定了要遍历的集合名称。
+    open、separator和close属性分别表示IN子句的开头、元素之间的分隔符和结尾。
+    在遍历roleIds集合时，MyBatis会将每个元素的值替换为对应的占位符(#{roleId})，从而实现动态生成SQL语句的效果。
+    如果roleIds集合为空，则不会生成任何SQL语句，避免了产生错误的IN子句。-->
+    <select id="getDistinctPermissionsByRoleIds" resultMap="BaseResultMap">
+        SELECT
+        tb_permission.*
+        FROM tb_role,tb_role_permission,tb_permission
+        WHERE tb_role.id = tb_role_permission.role_id
+        AND tb_permission.id = tb_role_permission.permission_id
+        AND tb_role.id IN
+        <foreach collection="roleIds" item="roleId" open="(" close=")" separator=",">
+            #{roleId}
+        </foreach>
+    </select>
+</mapper>
