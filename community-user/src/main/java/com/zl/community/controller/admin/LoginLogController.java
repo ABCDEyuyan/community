@@ -1,4 +1,4 @@
-package com.zl.community.controller;
+package com.zl.community.controller.admin;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -29,16 +29,13 @@ import java.util.stream.Collectors;
 public class LoginLogController {
     private final LoginLogService loginLogService;
 
-
+    /**
+     * 登录日志分页查询
+     * @param pageQueryModel
+     * @return
+     */
     @ApiOperation("登录日志分页查询")
-    @GetMapping("/page")
-    public String ptest(){
-        return "sadfasdf";
-    }
-
-
-    @ApiOperation("登录日志分页查询")
-    @PostMapping("/page2")
+    @PostMapping("/page")
     public BaseResponse<IPage<LoginLogApi>> pageQuery(@RequestBody PageQueryModel pageQueryModel) {
         System.out.println("----------------------xxxxx");
         IPage<LoginLogEntity> iPage = loginLogService.pageQuery(pageQueryModel);

@@ -16,6 +16,7 @@ public enum ResultCode {
     FORBIDDEN_ERROR(4005, "禁止访问"),
     SYSTEM_ERROR(4006, "系统内部异常"),
     OPERATION_ERROR(4007, "操作失败"),
+    DATA_ISEMPTY(4008, "请求数据不存在"),
     /**
      * 用户名或密码错误！
      */

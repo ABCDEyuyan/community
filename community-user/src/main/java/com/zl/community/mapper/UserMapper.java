@@ -40,6 +40,7 @@ public interface UserMapper extends BaseMapper<UserEntity> {
                                                         @Param("email") String email,
                                                         @Param("phone") String phone);
 
+
 }
 
 

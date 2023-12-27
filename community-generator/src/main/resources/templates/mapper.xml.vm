@@ -1,0 +1,202 @@
+    ##引入mybatis支持
+        $!{mybatisSupport.vm}
+
+        ##设置保存名称与保存位置
+        $!callback.setFileName($tool.append($!{tableInfo.name}, "Mapper.xml"))
+        $!callback.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
+
+        ##拿到主键
+        #if(!$tableInfo.pkColumn.isEmpty())
+            #set($pk = $tableInfo.pkColumn.get(0))
+        #end
+    
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="${package.Mapper}.${table.mapperName}">
+
+    #if(${enableCache})
+        <!-- 开启二级缓存 -->
+        <cache type="${cacheClassName}"/>
+
+    #end
+    #if(${baseResultMap})
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="${package.Entity}.${entity}">
+            #foreach($field in ${table.fields})
+                #if(${field.keyFlag})##生成主键排在第一位
+                    <id column="${field.name}" property="${field.propertyName}"/>
+                #end
+            #end
+            #foreach($field in ${table.commonFields})##生成公共字段
+                <result column="${field.name}" property="${field.propertyName}"/>
+            #end
+            #foreach($field in ${table.fields})
+                #if(!${field.keyFlag})##生成普通字段
+                    <result column="${field.name}" property="${field.propertyName}"/>
+                #end
+            #end
+        </resultMap>
+    #end
+
+    #if(${baseColumnList})
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+                #foreach($field in ${table.commonFields})
+                    ${field.columnName},
+                #end
+                ${table.fieldNames}
+        </sql>
+
+    #end
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="${package.Mapper}.${table.mapperName}">
+        select
+        <include refid="Base_Column_List"/>
+        from $!table.obj.name
+            where $!pk.obj.name = #{$!pk.name}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAll" resultMap="${package.Mapper}.${table.mapperName}">
+        select
+        #allSqlColumn()
+        from $!table.obj.name
+        <where>
+            #foreach($column in $table.fullColumn)
+                <if test="$!column.name != null#if($column.type.equals(
+                    "java.lang.String")) and $!column.name != ''#end">
+                    and $!column.obj.name = #{$!column.name}
+                </if>
+            #end
+        </where>
+        <if test="orderByMe != null and orderByMe != '' and orderByMeSort != null and orderByMeSort != ''">
+            order by
+            <choose>
+                #foreach($column in $table.fullColumn)
+                    <when test="orderByMe == '$!column.name' and orderByMeSort == 'ASC'">
+                        $!column.obj.name
+                    </when>
+                #end
+                #foreach($column in $table.fullColumn)
+                    <when test="orderByMe == '$!column.name' and orderByMeSort == 'DESC'">
+                        $!column.obj.name desc
+                    </when>
+                #end
+                <otherwise>
+                    1
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <!--模糊查询指定行数据-->
+    <select id="queryAllLike" resultMap="${package.Mapper}.${table.mapperName}">
+        select
+        #allSqlColumn()
+        from $!table.obj.name
+        <where>
+            #foreach($column in $table.fullColumn)
+                <if test="$!column.name != null#if($column.type.equals(
+                    "java.lang.String")) and $!column.name != ''#end">
+                    and $!column.obj.name like concat('%',#{$!column.name},'%')
+                </if>
+            #end
+        </where>
+        <if test="orderByMe != null and orderByMe != '' and orderByMeSort != null and orderByMeSort != ''">
+            order by
+            <choose>
+                #foreach($column in $table.fullColumn)
+                    <when test="orderByMe == '$!column.name' and orderByMeSort == 'ASC'">
+                        $!column.obj.name
+                    </when>
+                #end
+                #foreach($column in $table.fullColumn)
+                    <when test="orderByMe == '$!column.name' and orderByMeSort == 'DESC'">
+                        $!column.obj.name desc
+                    </when>
+                #end
+                <otherwise>
+                    1
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(*)
+        from $!table.obj.name
+        <where>
+            #foreach($column in $table.fullColumn)
+                <if test="$!column.name != null#if($column.type.equals(
+                    "java.lang.String")) and $!column.name != ''#end">
+                    and $!column.obj.name = #{$!column.name}
+                </if>
+            #end
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="$!pk.name">
+        insert into $!{table.obj.name}(#foreach($column in $table.fullColumn)$!column.obj.name#if($foreach.hasNext), #end#end)
+                values (#foreach($column in $table.fullColumn)#{$!{column.name}}#if($foreach.hasNext), #end#end)
+    </insert>
+
+    <insert id="insertBatch" keyProperty="$!pk.name">
+        insert into $!{table.obj.name}
+        (#foreach($column in $table.fullColumn)$!column.obj.name#if($foreach.hasNext), #end#end)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#foreach($column in $table.fullColumn)#{entity.$!{column.name}}#if($foreach.hasNext), #end#end)
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="$!pk.name">
+        insert into $!{table.obj.name}
+        (#foreach($column in $table.fullColumn)$!column.obj.name#if($foreach.hasNext), #end#end)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#foreach($column in $table.fullColumn)#{entity.$!{column.name}}#if($foreach.hasNext), #end#end)
+        </foreach>
+        on duplicate key update
+        #foreach($column in $table.fullColumn)$!column.obj.name = values($!column.obj.name)#if($foreach.hasNext),
+        #end
+        #end
+
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update $!{table.obj.name}
+        <set>
+            #foreach($column in $table.fullColumn)
+                <if test="$!column.name != null#if($column.type.equals(
+                    "java.lang.String")) and $!column.name != ''#end">
+                    $!column.obj.name = #{$!column.name},
+                </if>
+            #end
+        </set>
+        where $!pk.obj.name = #{$!pk.name}
+    </update>
+
+    <!--通过主键修改全部非null数据-->
+    <update id="updateAll">
+        update $!{table.obj.name}
+        <set>
+            #foreach($column in $table.fullColumn)
+                <if test="$!column.name != null">
+                    $!column.obj.name = #{$!column.name},
+                </if>
+            #end
+        </set>
+        where $!pk.obj.name = #{$!pk.name}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from $!{table.obj.name} where $!pk.obj.name = #{$!pk.name}
+    </delete>
+
+</mapper>

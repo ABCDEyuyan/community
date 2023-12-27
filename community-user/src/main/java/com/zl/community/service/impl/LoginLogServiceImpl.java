@@ -26,6 +26,9 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLogEnt
 
     private final LoginLogMapper mapper;
 
+    /**
+     * 分页查询登录日志
+     */
     @Override
     public IPage<LoginLogEntity> pageQuery(PageQueryModel pageQueryModel) {
         IPage<LoginLogEntity> page = new Page<>(pageQueryModel.getPageNo(), pageQueryModel.getPageSize());

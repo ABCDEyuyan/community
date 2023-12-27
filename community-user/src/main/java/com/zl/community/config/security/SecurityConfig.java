@@ -66,8 +66,12 @@ public class SecurityConfig {
      */
     private final AccessDeniedHandlerConfig accessDeniedHandler;
 
+    /**
+     * 密码加密
+     * @return
+     */
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
@@ -111,7 +115,7 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer ignoringCustomizer() {
-        return (web) -> web.ignoring().antMatchers("/auth/login","/loginLog/page","/doc.html", "/webjars/**", "/swagger-resources/**", "/v2/api-docs");
+        return (web) -> web.ignoring().antMatchers("/auth/login","/druid/**","/loginLog/page","/doc.html", "/webjars/**", "/swagger-resources/**", "/v2/api-docs");
     }
 
 

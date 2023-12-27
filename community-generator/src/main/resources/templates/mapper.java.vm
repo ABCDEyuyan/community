@@ -1,0 +1,101 @@
+package com.zl.community.${package.Mapper};
+
+import com.zl.community.model.entity.${package.Entity}.${entity};
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
+/**
+ * <p>
+ * $!{table.comment} Mapper 接口
+ * </p>
+ *
+ * @author ${author}
+ */
+@Mapper
+public interface ${table.mapperName} extends ${superMapperClass}<${entity}> {
+
+        /**
+         * 通过ID查询单条数据
+         *
+         * @param $!pk.name 主键
+         * @return 实例对象
+         */
+        $!{table.name} queryById($!table.shortType $!table.name);
+
+        /**
+         * 查询指定行数据
+         *
+         * @param $!tool.firstLowerCase($!{table.name}) 查询条件
+         * @return 对象列表
+         */
+        List<$!{table.name}> queryAll($!{table.name} $!tool.firstLowerCase($!{table.name}));
+
+        /**
+         * 模糊查询指定行数据
+         *
+         * @param $!tool.firstLowerCase($!{table.name}) 查询条件
+         * @return 对象列表
+         */
+        List<$!{table.name}> queryAllLike($!{table.name} $!tool.firstLowerCase($!{table.name}));
+
+        /**
+         * 统计总行数
+         *
+         * @param $!tool.firstLowerCase($!{table.name}) 查询条件
+         * @return 总行数
+         */
+        long count($!{table.name} $!tool.firstLowerCase($!{table.name}));
+
+        /**
+         * 新增数据
+         *
+         * @param $!tool.firstLowerCase($!{table.name}) 实例对象
+         * @return 影响行数
+         */
+        int insert($!{table.name} $!tool.firstLowerCase($!{table.name}));
+
+        /**
+         * 批量新增数据（MyBatis原生foreach方法）
+         *
+         * @param entities List<$!{table.name}> 实例对象列表
+         * @return 影响行数
+         */
+        int insertBatch(@Param("entities") List<$!{table.name}> entities);
+
+        /**
+         * 批量新增或按主键更新数据（MyBatis原生foreach方法）
+         *
+         * @param entities List<$!{table.name}> 实例对象列表
+         * @return 影响行数
+         * @throws org.springframework.jdbc.BadSqlGrammarException 入参是空List的时候会抛SQL语句错误的异常，请自行校验入参
+         */
+        int insertOrUpdateBatch(@Param("entities") List<$!{table.name}> entities);
+
+        /**
+         * 修改数据
+         *
+         * @param $!tool.firstLowerCase($!{table.name}) 实例对象
+         * @return 影响行数
+         */
+        int update($!{table.name} $!tool.firstLowerCase($!{table.name}));
+
+        /**
+         * 修改全部非null数据
+         *
+         * @param $!tool.firstLowerCase($!{table.name}) 实例对象
+         * @return 影响行数
+         */
+        int updateAll($!{table.name} $!tool.firstLowerCase($!{table.name}));
+
+        /**
+         * 通过主键删除数据
+         *
+         * @param $!pk.name 主键
+         * @return 影响行数
+         */
+        int deleteById($!table.shortType $!table.name);
+
+}

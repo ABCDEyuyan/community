@@ -27,7 +27,7 @@ public class MybtaisPlusCodeAutoGeneration {
                 })
                 // 策略配置
                 .strategyConfig(builder -> {
-                    builder.addInclude("user") // 设置需要生成的表名
+                    builder.addInclude("post") // 设置需要生成的表名
 //                            .addTablePrefix("sys_") // 设置过滤表前缀
                             // Entity 策略配置
                             .entityBuilder()

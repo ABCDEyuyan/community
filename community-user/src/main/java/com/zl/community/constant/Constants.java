@@ -58,6 +58,16 @@ public class Constants {
         public static final Integer DISABLE = 1;
 
         /**
+         * 普通用户
+         */
+        public static final Integer USER = 0;
+
+        /**
+         * 管理员
+         */
+        public static final Integer ADMIN = 1;
+
+        /**
          * 页面
          */
         public static final Integer PAGE = 1;

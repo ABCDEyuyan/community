@@ -2,7 +2,7 @@ package com.zl.community.service.impl;
 
 import com.zl.community.common.ResultCode;
 import com.zl.community.exception.BusinessException;
-import com.zl.community.model.dto.LoginRequest;
+import com.zl.community.model.dto.LoginRequestModel;
 import com.zl.community.model.entity.LoginLogEntity;
 import com.zl.community.model.vo.UserPrincipal;
 import com.zl.community.service.LoginLogService;
@@ -16,7 +16,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -35,16 +34,16 @@ public class LoginServiceImpl {
     private final LoginLogService loginLogService;
     private final JwtUtils jwtUtils;
 
-    public String login(LoginRequest loginRequest) {
+    public String login(LoginRequestModel loginRequestModel) {
         // Todo 判断验证码
         Authentication authenticate = null;
         try {
             //更新登录用户对象
-            authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsernameOrEmailOrPhone(), loginRequest.getPassword()));
+            authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestModel.getUsernameOrEmailOrPhone(), loginRequestModel.getPassword()));
 
             AuthenticationContextUtils.setContext(authenticate);
 //            UsernamePasswordAuthenticationToken authenticationToken =
-//                    new UsernamePasswordAuthenticationToken(loginRequest.getUsernameOrEmailOrPhone(), loginRequest.getPassword());
+//                    new UsernamePasswordAuthenticationToken(loginRequestModel.getUsernameOrEmailOrPhone(), loginRequestModel.getPassword());
 //            System.out.println("authenticationToken = " + authenticationToken);
 //            // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
 //            authenticate = authenticationManager.authenticate(authenticationToken);
@@ -59,7 +58,7 @@ public class LoginServiceImpl {
         }
         UserPrincipal userPrincipal = (UserPrincipal) authenticate.getPrincipal();
         // 生成Token,将token存入redis中
-        String jwt = jwtUtils.createJWT(userPrincipal, loginRequest.getRememberMe());
+        String jwt = jwtUtils.createJWT(userPrincipal, loginRequestModel.getRememberMe());
         // 记录到日志中登录成功
         Assert.isTrue(loginLogService.save(recordLoginInfo(userPrincipal)), "日志添加失败");
 

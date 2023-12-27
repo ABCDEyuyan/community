@@ -4,36 +4,51 @@ import java.io.Serializable;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import com.baomidou.mybatisplus.annotation.TableName;
+import org.checkerframework.checker.units.qual.Length;
+
+import javax.validation.constraints.NotEmpty;
+
+import static com.baomidou.mybatisplus.annotation.IdType.ASSIGN_ID;
 
 /**
-* 用户
-*/
+ * @Author : ZL
+ * 用户
+ */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("user")
-@ApiModel(value="UserApi对象", description="用户")
+@ApiModel(value = "UserApi对象", description = "用户")
 public class UserApi implements Serializable {
 
-private static final long serialVersionUID=1L;
+    private static final long serialVersionUID = 1L;
 
     @ApiModelProperty("id")
+    @Length
     private Long id;
 
     @ApiModelProperty("账号")
+    @Length
     private String userAccount;
 
     @ApiModelProperty("密码")
+    @NotEmpty(message = "密码不能为空")
+    @Length
     private String userPassword;
 
     @ApiModelProperty("用户昵称")
+    @NotEmpty(message = "用户昵称不能为空")
     private String userName;
 
     @ApiModelProperty("用户头像")
+    @NotEmpty(message = "用户头像不能为空")
     private String userAvatar;
 
     @ApiModelProperty("用户简介")
@@ -43,6 +58,7 @@ private static final long serialVersionUID=1L;
     private String userPlace;
 
     @ApiModelProperty("生日")
+    @NotEmpty(message = "出生年月不能为空")
     private LocalDate userBirthday;
 
     @ApiModelProperty("主攻方向")
@@ -76,12 +92,15 @@ private static final long serialVersionUID=1L;
     private Integer userRole;
 
     @ApiModelProperty("性别 0 - 男/1 - 女")
+    @NotEmpty(message = "性别不能为空")
     private Integer gender;
 
     @ApiModelProperty("电话")
+    @NotEmpty(message = "电话不能为空")
     private String phone;
 
     @ApiModelProperty("邮箱")
+    @NotEmpty(message = "邮箱不能为空")
     private String email;
 
     @ApiModelProperty("积分")

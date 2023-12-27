@@ -1,5 +1,8 @@
 package com.example.communityuser;
 
+import cn.hutool.core.lang.Snowflake;
+import cn.hutool.core.lang.generator.SnowflakeGenerator;
+import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zl.MainApplication;
@@ -18,6 +21,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -94,4 +99,28 @@ public class TestLoginLogPgTest {
                 .build();
         System.out.println(user.getPassword());
     }
+
+
+    @Autowired
+    private  SnowflakeGenerator snowflakeGenerator;
+
+    @Test
+    public void testId(){
+        System.out.println("config.snowflake() = " + String.valueOf(snowflakeGenerator.next()));
+    }
+
+
+    @Autowired
+    private  UserService user;
+
+    @Test
+    public void testPage(){
+        PageQueryModel s=new PageQueryModel();
+        s.setPageSize(1);
+        s.setPageNo(1);
+        IPage<UserEntity> userEntityIPage = user.pageQuery(s);
+        System.out.println("userEntityIPage = " + userEntityIPage);
+    }
+
+
 }

@@ -3,24 +3,13 @@ package com.zl.community.controller;
 import com.zl.community.common.BaseResponse;
 import com.zl.community.common.ResultCode;
 import com.zl.community.exception.SecurityException;
-import com.zl.community.model.dto.LoginRequest;
-import com.zl.community.model.vo.UserPrincipal;
-import com.zl.community.service.LoginLogService;
-import com.zl.community.service.impl.LoginLogServiceImpl;
+import com.zl.community.model.dto.LoginRequestModel;
 import com.zl.community.service.impl.LoginServiceImpl;
-import com.zl.community.util.AuthenticationContextUtils;
 import com.zl.community.util.JwtUtils;
-import com.zl.community.util.ResponseUtil;
 import com.zl.community.util.ResultUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,13 +38,13 @@ public class AuthController {
 
     /**
      * 登录
-     * @param loginRequest
+     * @param loginRequestModel
      * @return
      */
     @ApiOperation("登录")
     @PostMapping("/login")
-    public BaseResponse login(@Valid @RequestBody LoginRequest loginRequest) {
-        String jwt = loginService.login(loginRequest);
+    public BaseResponse login(@Valid @RequestBody LoginRequestModel loginRequestModel) {
+        String jwt = loginService.login(loginRequestModel);
         return ResultUtils.success(ResultCode.SUCCESS,jwt);
     }
 

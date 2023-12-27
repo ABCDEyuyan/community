@@ -34,8 +34,8 @@ public class Knife4jConfig {
     public Docket defaultApi2() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(new ApiInfoBuilder()
-                        .title("clearly-understand-community-user Restful APIs")
-                        .description("clearly-understand-community-user")
+                        .title("clearly-understand-community Restful APIs")
+                        .description("clearly-understand-community")
                         .version("1.0")
                         .contact(new Contact("ZL","https://blog.csdn.net/zl2742309319?type=blog","2742309319@qq.com"))
                         .build())

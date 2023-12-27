@@ -20,6 +20,7 @@ public class ResultUtils {
         return new BaseResponse(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), data);
     }
 
+
     public static <T> BaseResponse<T> success(String message, T data) {
         return new BaseResponse(ResultCode.SUCCESS.getCode(), message, data);
     }

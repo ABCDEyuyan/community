@@ -44,6 +44,7 @@
         points,user_status,create_time,
         update_time,is_deleted
     </sql>
+    <!--todo:优化一下sql-->
     <select id="selectByUserNameOrEmailOrPhone" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>

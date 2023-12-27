@@ -84,8 +84,8 @@ public class LogOperationAspect {
         operationLogEntity.setStatus(status);
         operationLogEntity.setCreateId(loginUser.getId());
         operationLogEntity.setUpdateId(loginUser.getId());
-        operationLogEntity.setCreateTime(LocalDateTime.now());
-        operationLogEntity.setUpdateTime(LocalDateTime.now());
+//        operationLogEntity.setCreateTime(LocalDateTime.now());
+//        operationLogEntity.setUpdateTime(LocalDateTime.now());
         HttpServletRequest request = ServletUtils.getRequest();
         operationLogEntity.setIp(IpUtils.getIpAddr(request));
         operationLogEntity.setRequestUri(request.getRequestURI());

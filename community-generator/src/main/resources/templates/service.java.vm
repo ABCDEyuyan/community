@@ -1,0 +1,92 @@
+##定义初始变量
+#set($tableName = $tool.append($table.name, "Service"))
+##设置回调
+$!callback.setFileName($tool.append($tableName, ".java"))
+$!callback.setSavePath($tool.append($table.savePath, "/service"))
+
+##拿到主键
+#if(!$table.pkColumn.isEmpty())
+    #set($pk = $table.pkColumn.get(0))
+#end
+
+package com.zl.community.service.$!{table.name}Service;;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.zl.community.model.dto.PageQueryModel;
+
+/**
+ * $!{table.comment}($!{table.name})表服务接口
+ *
+ * @author $!author
+ * @since $!time.currTime()
+ */
+public interface ${table.serviceName} extends ${superServiceClass}<${entity}>{
+
+        /**
+         * 通过ID查询单条数据
+         *
+         * @param $!pk.name 主键
+         * @return 实例对象
+         */
+        ${entity} queryById($!pk.shortType $!pk.name);
+
+        /**
+         * 全查询
+         *
+         * @param $!tool.firstLowerCase($!{table.name}) 筛选条件
+         * @return 查询结果
+         */
+        ${entity} queryAll($!{table.name} $!tool.firstLowerCase($!{table.name}));
+
+        /**
+         * 模糊全查询
+         *
+         * @param $!tool.firstLowerCase($!{table.name}) 筛选条件
+         * @return 查询结果
+         */
+        ${entity} queryAllLike($!{table.name} $!tool.firstLowerCase($!{table.name}));
+
+        /**
+         * 分页查询
+         *
+         * @param pageNum 页数
+         * @param pageSize 每页数量
+         * @param $!{tool.firstLowerCase($table.name)} 筛选条件
+         * @return 查询结果
+         */
+        IPage page(PageQueryModel pageQueryModel, $!{table.name} $!tool.firstLowerCase($!{table.name}));
+
+        /**
+         * 分页模糊查询
+         *
+         * @param pageNum  页数
+         * @param pageSize 每页数量
+         * @param $!{tool.firstLowerCase($table.name)} 筛选条件
+         * @return 查询结果
+         */
+        IPage pageLike(PageQueryModel pageQueryModel, $!{table.name} $!tool.firstLowerCase($!{table.name}));
+
+        /**
+         * 新增数据
+         *
+         * @param $!tool.firstLowerCase($!{table.name}) 实例对象
+         * @return 实例对象
+         */
+        boolean insert($!{table.name} $!tool.firstLowerCase($!{table.name}));
+
+        /**
+         * 修改数据
+         *
+         * @param $!tool.firstLowerCase($!{table.name}) 实例对象
+         * @return 实例对象
+         */
+        boolean update($!{table.name} $!tool.firstLowerCase($!{table.name}));
+
+        /**
+         * 通过主键删除数据
+         *
+         * @param $!pk.name 主键
+         * @return 是否成功
+         */
+        boolean deleteById($!pk.shortType $!pk.name);
+
+        }

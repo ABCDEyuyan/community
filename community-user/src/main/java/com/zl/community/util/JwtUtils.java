@@ -176,12 +176,12 @@ public class JwtUtils {
      */
     public String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader(HEADER);
-//        if (StrUtil.isNotBlank(bearerToken) && bearerToken.startsWith(jwtConfig.getKey())) {
-//            return bearerToken.substring(8);
-//        }
-//        return null;
-        System.out.println("bearerToken.substring(8) = " + bearerToken.substring(8));
-        return bearerToken.substring(8);
+        if (StrUtil.isNotBlank(bearerToken) ) {
+            System.out.println("bearerToken = " + bearerToken);
+            System.out.println("bearerToken.substring(8) = " + bearerToken.substring(8));
+            return bearerToken;
+        }
+        return null;
     }
 
 
