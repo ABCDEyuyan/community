@@ -17,6 +17,7 @@ public enum ResultCode {
     SYSTEM_ERROR(4006, "系统内部异常"),
     OPERATION_ERROR(4007, "操作失败"),
     DATA_ISEMPTY(4008, "请求数据不存在"),
+    UPLOAD_ERROR(4009,"上传失败"),
     /**
      * 用户名或密码错误！
      */

@@ -6,10 +6,7 @@ import com.zl.community.common.BaseResponse;
 import com.zl.community.common.ResultCode;
 import com.zl.community.controller.BaseController;
 import com.zl.community.exception.BusinessException;
-import com.zl.community.model.dto.OperateByIdModel;
-import com.zl.community.model.dto.PostCreateModel;
-import com.zl.community.model.dto.PostEditModel;
-import com.zl.community.model.dto.PostQueryModel;
+import com.zl.community.model.dto.*;
 import com.zl.community.model.entity.PostEntity;
 import com.zl.community.model.vo.PostVO;
 import com.zl.community.model.vo.UserPrincipal;
@@ -63,7 +60,7 @@ public class PostController extends BaseController {
         boolean result = postService.save(post);
         ThrowUtils.throwIf(!result, ResultCode.OPERATION_ERROR);
         long newPostId = post.getId();
-        return ResultUtils.success(newPostId);
+        return ResultUtils.success(ResultCode.SUCCESS,newPostId);
     }
 
     /**
@@ -90,7 +87,7 @@ public class PostController extends BaseController {
             throw new BusinessException(ResultCode.NO_AUTH_ERROR);
         }
         boolean b = postService.removeById(id);
-        return ResultUtils.success(b);
+        return ResultUtils.success(ResultCode.SUCCESS,b);
     }
 
 //    /**
@@ -118,92 +115,8 @@ public class PostController extends BaseController {
 //        PostApi oldPost = postService.getById(id);
 //        ThrowUtils.throwIf(oldPost == null, ErrorCode.NOT_FOUND_ERROR);
 //        boolean result = postService.updateById(post);
-//        return ResultUtils.success(result);
+//        return ResultUtils.success(ResultCode.SUCCESS,result);
 //    }
-
-    /**
-     * 根据 id 获取帖子
-     *
-     * @param id
-     * @return
-     */
-    @LogOperation("根据id获取帖子操作")
-    @ApiOperation("根据id获取帖子")
-    @GetMapping("/get/vo")
-    public BaseResponse<PostVO> getPostVOById(long id) {
-        if (id <= 0) {
-            throw new BusinessException(ResultCode.PARAMS_ERROR);
-        }
-        PostEntity post = postService.getById(id);
-        if (post == null) {
-            throw new BusinessException(ResultCode.NOT_FOUND_ERROR);
-        }
-        return ResultUtils.success(postService.getPostVO(post));
-    }
-
-    /**
-     * 分页获取帖子列表（封装类）
-     *
-     * @param postQueryModel
-     * @return
-     */
-    @LogOperation("分页获取帖子列表（主页）操作")
-    @ApiOperation("分页获取帖子列表（主页）")
-    @PostMapping("/list/page/vo")
-    public BaseResponse<Page<PostVO>> listPostVOByPage(@RequestBody PostQueryModel postQueryModel) {
-        Integer pageNo = postQueryModel.getPageNo();
-        Integer pageSize = postQueryModel.getPageSize();
-        // 限制爬虫
-        ThrowUtils.throwIf(pageSize > 20, ResultCode.PARAMS_ERROR);
-        Page<PostEntity> postPage = postService.page(new Page<>(pageNo, pageSize),
-                postService.getQueryWrapper(postQueryModel));
-        return ResultUtils.success(postService.getPostVOPage(postPage));
-    }
-
-    /**
-     * 分页获取当前用户创建的资源列表
-     *
-     * @param postQueryModel
-     * @return
-     */
-    @LogOperation("分页获取当前用户创建的资源列表（用户个人中心）操作")
-    @ApiOperation("分页获取当前用户创建的资源列表（用户个人中心）")
-    @PostMapping("/my/list/page/vo")
-    public BaseResponse<Page<PostVO>> listMyPostVOByPage(@RequestBody PostQueryModel postQueryModel) {
-        if (postQueryModel == null) {
-            throw new BusinessException(ResultCode.PARAMS_ERROR);
-        }
-        BaseController baseController = new BaseController();
-        UserPrincipal loginUser = baseController.getLoginUser();
-//        UserEntity loginUser = userService.getLoginUser(request);
-        postQueryModel.setUserAccount(loginUser.getUserAccount());
-        Integer pageNo = postQueryModel.getPageNo();
-        Integer pageSize = postQueryModel.getPageSize();
-        // 限制爬虫
-        ThrowUtils.throwIf(pageSize > 20, ResultCode.PARAMS_ERROR);
-        Page<PostEntity> postPage = postService.page(new Page<>(pageNo, pageSize),
-                postService.getQueryWrapper(postQueryModel));
-        return ResultUtils.success(postService.getPostVOPage(postPage));
-    }
-
-    // endregion
-
-    /**
-     * 分页搜索（从 ES 查询，封装类）
-     *
-     * @param postQueryModel
-     * @return
-     */
-    @LogOperation("分页搜索（ES）操作")
-    @ApiOperation("分页搜索（ES）")
-    @PostMapping("/search/page/vo")
-    public BaseResponse<Page<PostVO>> searchPostVOByPage(@RequestBody PostQueryModel postQueryModel) {
-        Integer pageSize = postQueryModel.getPageSize();
-        // 限制爬虫
-        ThrowUtils.throwIf(pageSize > 20, ResultCode.PARAMS_ERROR);
-        Page<PostEntity> postPage = postService.searchFromEs(postQueryModel);
-        return ResultUtils.success(postService.getPostVOPage(postPage));
-    }
 
     /**
      * 编辑（用户）
@@ -240,6 +153,89 @@ public class PostController extends BaseController {
             throw new BusinessException(ResultCode.NO_AUTH_ERROR);
         }
         boolean result = postService.updateById(post);
-        return ResultUtils.success(result);
+        return ResultUtils.success(ResultCode.SUCCESS,result);
     }
+
+    /**
+     * 根据 id 获取帖子
+     *
+     * @param id
+     * @return
+     */
+    @LogOperation("根据id获取帖子操作")
+    @ApiOperation("根据id获取帖子")
+    @GetMapping("/get/vo")
+    public BaseResponse<PostVO> getPostVOById(long id) {
+        if (id <= 0) {
+            throw new BusinessException(ResultCode.PARAMS_ERROR);
+        }
+        PostEntity post = postService.getById(id);
+        if (post == null) {
+            throw new BusinessException(ResultCode.NOT_FOUND_ERROR);
+        }
+        return ResultUtils.success(ResultCode.SUCCESS,postService.getPostVO(post));
+    }
+
+    /**
+     * 分页获取帖子列表（封装类）
+     *
+     * @param postQueryModel
+     * @return
+     */
+    @LogOperation("分页获取帖子列表（主页）操作")
+    @ApiOperation("分页获取帖子列表（主页）")
+    @PostMapping("/list/page/vo")
+    public BaseResponse<Page<PostVO>> listPostVOByPage(@RequestBody PostQueryModel postQueryModel) {
+        Integer pageNo = postQueryModel.getPageNo();
+        Integer pageSize = postQueryModel.getPageSize();
+        // 限制爬虫
+        ThrowUtils.throwIf(pageSize > 20, ResultCode.PARAMS_ERROR);
+        Page<PostEntity> postPage = postService.page(new Page<>(pageNo, pageSize),
+                postService.getQueryWrapper(postQueryModel));
+        return ResultUtils.success(ResultCode.SUCCESS,postService.getPostVOPage(postPage));
+    }
+
+    /**
+     * 分页获取当前用户创建的资源列表
+     *
+     * @param postQueryModel
+     * @return
+     */
+    @LogOperation("分页获取当前用户创建的资源列表（用户个人中心）操作")
+    @ApiOperation("分页获取当前用户创建的资源列表（用户个人中心）")
+    @PostMapping("/my/list/page/vo")
+    public BaseResponse<Page<PostVO>> listMyPostVOByPage(@RequestBody PostQueryModel postQueryModel) {
+        if (postQueryModel == null) {
+            throw new BusinessException(ResultCode.PARAMS_ERROR);
+        }
+        BaseController baseController = new BaseController();
+        UserPrincipal loginUser = baseController.getLoginUser();
+//        UserEntity loginUser = userService.getLoginUser(request);
+        postQueryModel.setUserAccount(loginUser.getUserAccount());
+        Integer pageNo = postQueryModel.getPageNo();
+        Integer pageSize = postQueryModel.getPageSize();
+        // 限制爬虫
+        ThrowUtils.throwIf(pageSize > 20, ResultCode.PARAMS_ERROR);
+        Page<PostEntity> postPage = postService.page(new Page<>(pageNo, pageSize),
+                postService.getQueryWrapper(postQueryModel));
+        return ResultUtils.success(ResultCode.SUCCESS,postService.getPostVOPage(postPage));
+    }
+
+    /**
+     * 分页搜索（从 ES 查询，封装类）
+     *
+     * @param postQueryModel
+     * @return
+     */
+    @LogOperation("分页搜索（ES）操作")
+    @ApiOperation("分页搜索（ES）")
+    @PostMapping("/search/page/vo")
+    public BaseResponse<Page<PostVO>> searchPostVOByPage(@RequestBody PostQueryModel postQueryModel) {
+        Integer pageSize = postQueryModel.getPageSize();
+        // 限制爬虫
+        ThrowUtils.throwIf(pageSize > 20, ResultCode.PARAMS_ERROR);
+        Page<PostEntity> postPage = postService.searchFromEs(postQueryModel);
+        return ResultUtils.success(ResultCode.SUCCESS,postService.getPostVOPage(postPage));
+    }
+
 }

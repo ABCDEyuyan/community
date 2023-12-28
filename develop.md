@@ -4,6 +4,8 @@ jwt
 rbac
 redis存储
 
+aop实现操作日志
+
 log日志
 
 mybatis-plius
@@ -107,5 +109,9 @@ es
 websocket
 
 minio 视频 热榜
+
+
+minio 首页 个人中心 搜索页面 后端 热榜 推荐 es 验证码 登录 页面级别的权限控制 按钮级别的权限控制 
+积分 视频 
 
 

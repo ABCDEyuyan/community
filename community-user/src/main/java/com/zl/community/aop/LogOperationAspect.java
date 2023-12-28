@@ -93,8 +93,14 @@ public class LogOperationAspect {
 
         // 获取参数
         Object[] args = joinPoint.getArgs();
-        String params = JacksonUtils.toJson(args[0]);
-        operationLogEntity.setRequestParams(params);
+        if(args.length>0){
+            String params = JacksonUtils.toJson(args[0]);
+            operationLogEntity.setRequestParams(params);
+        }else {
+            //这里处理请求没有携带任何请求参数的情况
+            operationLogEntity.setRequestParams("当前请求没有携带任何的请求参数");
+        }
+
 
         // 保存数据
         operationLogService.save(operationLogEntity);
