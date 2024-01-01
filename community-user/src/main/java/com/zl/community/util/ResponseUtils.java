@@ -1,10 +1,7 @@
 package com.zl.community.util;
 
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import com.zl.community.common.ResultCode;
 import com.zl.community.exception.BusinessException;
-import com.zl.community.exception.SecurityException;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletResponse;
@@ -14,7 +11,7 @@ import java.io.IOException;
  * @Author : ZL
  */
 @Slf4j
-public class ResponseUtil {
+public class ResponseUtils {
     /**
      * 往 response 写出 json
      *

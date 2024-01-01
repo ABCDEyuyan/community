@@ -11,7 +11,11 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-
+  servlet:
+    multipart:
+      # 大小限制
+      max-file-size: 50MB
+      max-request-size: 50MB
   # 数据库配置
   # todo 需替换配置
   datasource:
@@ -58,6 +62,17 @@ spring:
         config:
           multi-statement-allow: true
 
+    # Druid监控配置
+    druid:
+      webStatFilter:
+        enabled: true
+        urlPattern: /druid/*
+      statViewServlet:
+        enabled: true
+        allow:
+        loginUsername: admin
+        loginPassword: admin
+
   #Redis 配置
   #todo 需替换配置，然后取消注释
   redis:
@@ -82,6 +97,9 @@ server:
   port: 8101
   servlet:
     context-path: /api
+  tomcat:
+    max-swallow-size: 100MB
+
 
 # 对象存储
 # todo 需替换配置

@@ -1,6 +1,6 @@
 package com.zl.community.service;
 
-import org.springframework.web.multipart.MultipartFile;
+import com.zl.community.util.FileInfo;
 
 /**
  * @Author : ZL
@@ -12,7 +12,7 @@ public interface MinioService {
      * @param file
      * @return
      */
-    boolean avatarUpload(MultipartFile file);
+    boolean avatarUpload(FileInfo file);
 
     /**
      * 获取Minio图片地址

@@ -1,7 +1,6 @@
 package com.zl.community.config.security;
 
-import com.zl.community.util.ResponseUtil;
-import org.springframework.context.annotation.Bean;
+import com.zl.community.util.ResponseUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -21,11 +20,11 @@ import static com.zl.community.common.ResultCode.UN_AUTHORIZED;
 public class AuthenticationEntryPointConfig implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        ResponseUtil.renderJson(response, UN_AUTHORIZED, null);
+        ResponseUtils.renderJson(response, UN_AUTHORIZED, null);
     }
 
 //    @Bean
 //    public AuthenticationEntryPoint authenticationEntryPoint() {
-//        return (request, response, authException) -> ResponseUtil.renderJson(response, UN_AUTHORIZED, null);
+//        return (request, response, authException) -> ResponseUtils.renderJson(response, UN_AUTHORIZED, null);
 //    }
 }

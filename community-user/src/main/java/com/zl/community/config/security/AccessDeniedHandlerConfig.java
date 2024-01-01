@@ -1,7 +1,6 @@
 package com.zl.community.config.security;
 
-import com.zl.community.util.ResponseUtil;
-import org.springframework.context.annotation.Bean;
+import com.zl.community.util.ResponseUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -21,10 +20,10 @@ import static com.zl.community.common.ResultCode.NO_AUTH_ERROR;
 public class AccessDeniedHandlerConfig implements AccessDeniedHandler{
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        ResponseUtil.renderJson(response, NO_AUTH_ERROR, null);
+        ResponseUtils.renderJson(response, NO_AUTH_ERROR, null);
     }
 //    @Bean
 //    public AccessDeniedHandler accessDeniedHandler() {
-//        return (request, response, accessDeniedException) -> ResponseUtil.renderJson(response, NO_AUTH_ERROR, null);
+//        return (request, response, accessDeniedException) -> ResponseUtils.renderJson(response, NO_AUTH_ERROR, null);
 //    }
 }

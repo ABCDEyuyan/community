@@ -29,6 +29,16 @@
       "name": "wx.open.appSecret",
       "type": "java.lang.String",
       "description": "Description for wx.open.appSecret."
+    },
+    {
+      "name": "spring.datasource.maxEvictableIdleTimeMillis",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.maxEvictableIdleTimeMillis."
+    },
+    {
+      "name": "spring.datasource.maxEvictableIdleTimeMillis",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.maxEvictableIdleTimeMillis."
     }
   ]
 }

@@ -6,6 +6,7 @@ import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zl.MainApplication;
+import com.zl.community.config.SnowflakeConfig;
 import com.zl.community.mapper.UserMapper;
 import com.zl.community.model.dto.PageQueryModel;
 import com.zl.community.model.entity.LoginLogEntity;
@@ -102,11 +103,15 @@ public class TestLoginLogPgTest {
 
 
     @Autowired
-    private  SnowflakeGenerator snowflakeGenerator;
+    private SnowflakeConfig snowflakeConfig;
 
     @Test
     public void testId(){
-        System.out.println("config.snowflake() = " + String.valueOf(snowflakeGenerator.next()));
+
+        String fileName ="asdasdasdad.dasda.jpeg";
+        String suffix = fileName.substring(fileName.lastIndexOf("."));
+        String newFileName = fileName.substring(0, fileName.lastIndexOf(".")) + snowflakeConfig.snowflakeGenerator().next()+suffix;
+        System.out.println("newFileName = " + newFileName);
     }
 
 

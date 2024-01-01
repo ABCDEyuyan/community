@@ -8,10 +8,10 @@ import io.minio.messages.Bucket;
 import io.minio.messages.DeleteError;
 import io.minio.messages.DeleteObject;
 import io.minio.messages.Item;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,7 +20,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
@@ -31,7 +30,6 @@ import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,13 +39,12 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class MinioUtils {
-    @Autowired
-    private static MinioConfig minioConfig;
-    @Autowired
-    private static SnowflakeConfig snowflakeConfig;
-    @Resource
-    private static MinioClient minioClient;
+    private final MinioConfig minioConfig;
+    //TODO:工具类还要优化
+    private final MinioClient minioClient;
+
 
     /**
      * 检查存储桶是否存在
@@ -62,7 +59,7 @@ public class MinioUtils {
      * 在使用 @SneakyThrows 注解时，需要确保调用的方法或代码块确实会抛出 checked exception，否则可能会掩盖潜在的错误。
      */
     @SneakyThrows
-    public static boolean bucketExists(String bucketName) {
+    public boolean bucketExists(String bucketName) {
         BucketExistsArgs args = BucketExistsArgs.builder().bucket(bucketName).build();
         return minioClient.bucketExists(args);
     }
@@ -73,7 +70,7 @@ public class MinioUtils {
      * @param bucketName 存储桶名称
      */
     @SneakyThrows
-    public static void makeBucket(String bucketName) {
+    public void makeBucket(String bucketName) {
         if (!bucketExists(bucketName)) {
             MakeBucketArgs args = MakeBucketArgs.builder().bucket(bucketName).build();
             minioClient.makeBucket(args);
@@ -83,7 +80,7 @@ public class MinioUtils {
     /**
      * 获取全部bucket
      */
-    public static List<Bucket> getAllBuckets() {
+    public List<Bucket> getAllBuckets() {
         try {
             List<Bucket> buckets = minioClient.listBuckets();
             return buckets;
@@ -98,7 +95,7 @@ public class MinioUtils {
      *
      * @return 存储bucket内文件对象信息
      */
-    public static List<Item> listObjects() {
+    public List<Item> listObjects() {
         Iterable<Result<Item>> results = minioClient.listObjects(
                 ListObjectsArgs.builder().bucket(minioConfig.getBucketName()).build());
         List<Item> items = new ArrayList<>();
@@ -121,7 +118,7 @@ public class MinioUtils {
      * @return
      */
     @SneakyThrows
-    public static Iterable<Result<Item>> listObjects1(String bucketName) {
+    public Iterable<Result<Item>> listObjects1(String bucketName) {
         if (bucketExists(bucketName)) {
             ListObjectsArgs args = ListObjectsArgs.builder().bucket(bucketName).build();
             return minioClient.listObjects(args);
@@ -135,7 +132,7 @@ public class MinioUtils {
      * @param bucketName 存储bucket名称
      * @return Boolean
      */
-    public static Boolean removeBucket(String bucketName) {
+    public Boolean removeBucket(String bucketName) {
         try {
             minioClient.removeBucket(RemoveBucketArgs.builder()
                     .bucket(bucketName)
@@ -154,7 +151,7 @@ public class MinioUtils {
      * @param objectName 存储桶里的对象名称
      */
     @SneakyThrows
-    public static boolean removeObject(String bucketName, String objectName) {
+    public boolean removeObject(String bucketName, String objectName) {
         if (bucketExists(bucketName)) {
             RemoveObjectArgs args = RemoveObjectArgs.builder().bucket(bucketName).object(objectName).build();
             minioClient.removeObject(args);
@@ -169,7 +166,7 @@ public class MinioUtils {
      * @param bucketName 存储bucket名称
      * @param objects    对象名称集合
      */
-    public static Iterable<Result<DeleteError>> removeObjects(String bucketName, List<String> objects) {
+    public Iterable<Result<DeleteError>> removeObjects(String bucketName, List<String> objects) {
         List<DeleteObject> dos = objects.stream().map(e -> new DeleteObject(e)).collect(Collectors.toList());
         Iterable<Result<DeleteError>> results = minioClient.removeObjects(RemoveObjectsArgs.builder().bucket(bucketName).objects(dos).build());
         return results;
@@ -181,7 +178,7 @@ public class MinioUtils {
      * @param multipartFile
      * @return: java.lang.String
      */
-    public static List<String> putObject(MultipartFile[] multipartFile) {
+    public List<String> putObject(MultipartFile[] multipartFile) {
         List<String> names = new ArrayList<>(multipartFile.length);
         for (MultipartFile file : multipartFile) {
             String fileName = file.getOriginalFilename();
@@ -219,16 +216,16 @@ public class MinioUtils {
 
     /**
      * 文件上传
+     * putObject(InputStream in,String name,String name)
      *
      * @param file 文件
      * @return Boolean
      */
-    public static Boolean putObject(MultipartFile file) {
+    public Boolean putObject(FileInfo file) {
         try {
-            //为防止文件名称相同会覆盖，这里把用户上传的文件名+雪花ID作为minio存储名称
             PutObjectArgs objectArgs = PutObjectArgs.builder()
                     .bucket(minioConfig.getBucketName())
-                    .object(file.getOriginalFilename() + snowflakeConfig.snowflakeGenerator())
+                    .object(file.getNewFilename())
                     .stream(file.getInputStream(), file.getSize(), -1)
                     .contentType(file.getContentType()).build();
             //文件名称相同会覆盖
@@ -247,7 +244,7 @@ public class MinioUtils {
      * @param fileName
      * @return
      */
-    public static String getObjectUrl(String fileName) {
+    public String getObjectUrl(String fileName) {
         // 查看文件地址
         new GetPresignedObjectUrlArgs();
         GetPresignedObjectUrlArgs build = GetPresignedObjectUrlArgs.builder().bucket(minioConfig.getBucketName()).object(fileName).method(Method.GET).build();
@@ -269,7 +266,7 @@ public class MinioUtils {
      * @return
      */
     @SneakyThrows
-    public static String getObjectUrl(String bucketName, String region, String fileName) {
+    public String getObjectUrl(String bucketName, String region, String fileName) {
         return minioClient.getPresignedObjectUrl(
                 GetPresignedObjectUrlArgs.builder()
                         .method(Method.GET)
@@ -285,7 +282,7 @@ public class MinioUtils {
      * @param fileName
      * @return: org.springframework.http.ResponseEntity<byte [ ]>
      */
-    public static ResponseEntity<byte[]> download(String fileName) {
+    public ResponseEntity<byte[]> download(String fileName) {
         ResponseEntity<byte[]> responseEntity = null;
         InputStream in = null;
         ByteArrayOutputStream out = null;
@@ -333,7 +330,7 @@ public class MinioUtils {
      * @param res      response
      * @return Boolean
      */
-    public static void download(String fileName, HttpServletResponse res) {
+    public void download(String fileName, HttpServletResponse res) {
         GetObjectArgs objectArgs = GetObjectArgs.builder().bucket(minioConfig.getBucketName())
                 .object(fileName).build();
         try (GetObjectResponse response = minioClient.getObject(objectArgs)) {

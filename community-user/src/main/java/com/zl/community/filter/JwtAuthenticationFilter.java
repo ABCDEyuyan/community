@@ -8,7 +8,7 @@ import com.zl.community.config.security.CustomConfig;
 import com.zl.community.exception.SecurityException;
 import com.zl.community.service.security.CustomUserDetailsServiceImpl;
 import com.zl.community.util.JwtUtils;
-import com.zl.community.util.ResponseUtil;
+import com.zl.community.util.ResponseUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
@@ -78,11 +78,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         .setAuthentication(authentication);
                 filterChain.doFilter(request, response);
             } catch (SecurityException e) {
-                ResponseUtil.renderJson(response, e);
+                ResponseUtils.renderJson(response, e);
             }
         }
         else {
-            ResponseUtil.renderJson(response, NOT_LOGIN_ERROR, null);
+            ResponseUtils.renderJson(response, NOT_LOGIN_ERROR, null);
         }
 //        filterChain.doFilter(request, response);
     }
