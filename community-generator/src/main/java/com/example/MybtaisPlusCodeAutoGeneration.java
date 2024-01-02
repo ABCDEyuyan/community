@@ -15,7 +15,7 @@ public class MybtaisPlusCodeAutoGeneration {
                 // 全局配置
                 .globalConfig(builder -> {
                     builder.author("ZL") // 设置作者
-                            .outputDir("D:\\community\\community-generator\\src\\main\\java") // 指定输出目录
+                            .outputDir("D:\\zl\\community\\community-generator\\src\\main\\java\\") // 指定输出目录
                             .disableOpenDir() //禁止打开输出目录，默认打开
                             .enableSwagger()
                     ;
@@ -23,11 +23,11 @@ public class MybtaisPlusCodeAutoGeneration {
                 // 包配置
                 .packageConfig(builder -> {
                     builder.parent("com.example") // 设置父包名
-                            .pathInfo(Collections.singletonMap(OutputFile.xml, "D:\\community\\community-generator\\src\\main\\resources\\mapper\\")); // 设置mapperXml生成路径
+                            .pathInfo(Collections.singletonMap(OutputFile.xml, "D:\\zl\\community\\community-generator\\src\\main\\resources\\mapper\\")); // 设置mapperXml生成路径
                 })
                 // 策略配置
                 .strategyConfig(builder -> {
-                    builder.addInclude("post") // 设置需要生成的表名
+                    builder.addInclude("user") // 设置需要生成的表名
 //                            .addTablePrefix("sys_") // 设置过滤表前缀
                             // Entity 策略配置
                             .entityBuilder()

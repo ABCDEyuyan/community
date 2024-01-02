@@ -1,20 +1,47 @@
-权限
-spring security
-jwt
-rbac
-redis存储
+spring boot + mybatis-plus
 
-aop实现操作日志
+mybatis-plus-generator + velocity模板引擎对基本CRUD代码进行生成
 
-log日志
+spring security + jwt + rbac + redis 实现权限控制
 
-mybatis-plius
+aop+自定义注解实现操作日志 全局请求响应拦截器（记录日志）
 
-druid连接池
+druid连接池数据监控
+
+ElasticSearch检索  与 Spring Scheduler任务调度框架 定时任务 帖子全量同步 ES、定时任务增量同步 ES
+
+Swagger + Knife4j 接口文档
+
+minio对象存储
+
+vue3 + ant design vue 组件库构建前端应用
+
+Tiptap富文本编辑器 + markdown实现帖子发布
+
+基于websocket实现及时通知和推送功能，支持用户之间的及时消息交流
+
+Apatch Echarts数据统计
 
 beanutils
 
 hutuUtils java对象转map 
+
+
+# 业务功能
+- 用户登录、注册、注销、更新、检索、权限管理
+- 帖子创建、删除、编辑、更新、数据库检索、ES 灵活检索
+- 用户粉丝与关注
+- 帖子点赞、取消点赞
+- 草稿箱
+- 帖子收藏、取消收藏、检索已收藏帖子
+- 专栏收录帖子
+- 帖子全量同步 ES、增量同步 ES 定时任务
+- 支持分业务的文件上传
+
+- 用户消息推送和消息交流
+- 商城积分以及用户创作者中心
+- 热榜（文章榜，作者榜，话题榜，标签榜）和推荐好友
+
 
 
 # 主流框架 & 特性
@@ -43,26 +70,15 @@ hutuUtils java对象转map
 
 # 业务特性
 
-- Spring Session Redis 分布式登录
 - 全局请求响应拦截器（记录日志）
 - 全局异常处理器
 - 自定义错误码
 - 封装通用响应类
 - Swagger + Knife4j 接口文档
-- 自定义权限注解 + 全局校验
 - 全局跨域处理
 - 长整数丢失精度解决
 - 多环境配置
 
-# 业务功能
-
-- 提供示例 SQL（用户、帖子、帖子点赞、帖子收藏表）
-- 用户登录、注册、注销、更新、检索、权限管理
-- 帖子创建、删除、编辑、更新、数据库检索、ES 灵活检索
-- 帖子点赞、取消点赞
-- 帖子收藏、取消收藏、检索已收藏帖子
-- 帖子全量同步 ES、增量同步 ES 定时任务
-- 支持分业务的文件上传
 
 spring security的简单原理：
 使用众多的拦截器对url拦截，以此来管理权限。但是这么多拦截器,主要讲里面核心流程的两个.
